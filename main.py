@@ -18,7 +18,7 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 # CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL_1")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -32,6 +32,10 @@ class BlogPost(db.Model):
     body = db.Column(db.Text, nullable=False)
     author = db.Column(db.String(250), nullable=False)
     img_url = db.Column(db.String(250), nullable=False)
+
+
+with app.app_context():
+    db.create_all()
 
 
 # WTForm
@@ -72,7 +76,6 @@ def delete(post_id):
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect(url_for("get_all_posts"))
-
 
 
 @app.route("/edit-post/<post_id>", methods=["GET", "POst"])
